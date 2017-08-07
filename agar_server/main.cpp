@@ -9,11 +9,15 @@
 #include <sys/select.h>
 
 #include <vector>
+#include <iostream>
 
+using std::cout;
+using std::endl;
 using std::vector;
 
 #define PORT 9877
 #define BACKLOG 100
+
 #define BLOCK_SIZE 1500
 
 struct Session
@@ -26,25 +30,48 @@ struct Session
 
 struct Client
 {
-    bool ready;
+    bool isReady;
+    float dirX;
+    float dirY;
 };
+
+vector<Session> sessions;
+vector<Node> playerNodes;
+vector<Node> nonPlayerNodes;
 
 void onMessage(void * data,int size,Session * session)
 {
+    Client * client = (Client *)(session->userData);
+    uint8_t messageType = ((uint8_t*)data)[0];
     
+    cout<<"onMessage,size:"<<size<<" type:"<<messageType<<endl;
+    
+    switch(messageType) {
+        case 0:
+        {
+            break;
+        }
+        case 1:
+        {
+            
+            break;
+        }
+        default:
+            break;
+    }
 }
 
 void onClose(Session * session)
 {
-    
+    cout<<"onClose"<<session->fd<<endl;
 }
 
 void onConnect(Session * session)
 {
-    
+    cout<<"onConnect:"<<session->fd<<endl;
 }
 
-void update()
+void update(float delta)
 {
     
 }
@@ -87,7 +114,7 @@ int main(int argc, const char * argv[]) {
     socklen_t clientAddressLength;
     Session newSession;
     newSession.userData = NULL;
-    vector<Session> sessions;
+    
     fd_set readSet;
     fd_set writeSet;
     fd_set exceptionSet;
